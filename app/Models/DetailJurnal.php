@@ -9,6 +9,8 @@ class DetailJurnal extends Model
 {
     use HasFactory;
 
+    protected $table = 'detail_jurnal';
+
     protected $fillable = [
         'id_jurnal', 'id_akun', 'debit', 'kredit',
     ];

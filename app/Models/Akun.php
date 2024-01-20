@@ -9,6 +9,8 @@ class Akun extends Model
 {
     use HasFactory;
 
+    protected $table = 'akun';
+
     protected $fillable = [
         'sub_kategori_id', 'nama_akun', 'kode_akun',
     ];
