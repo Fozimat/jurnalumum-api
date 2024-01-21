@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\v1\Auth\AuthController;
 use App\Http\Controllers\v1\KategoriController;
+use App\Http\Controllers\v1\SubKategoriController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +27,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/kategori', [KategoriController::class, 'store']);
         Route::put('/kategori/{id}', [KategoriController::class, 'update']);
         Route::delete('/kategori/{id}', [KategoriController::class, 'destroy']);
+
+        Route::get('/sub-kategori', [SubKategoriController::class, 'index']);
+        Route::get('/sub-kategori/{id}', [SubKategoriController::class, 'show']);
+        Route::post('/sub-kategori', [SubKategoriController::class, 'store']);
+        Route::put('/sub-kategori/{id}', [SubKategoriController::class, 'update']);
+        Route::delete('/sub-kategori/{id}', [SubKategoriController::class, 'destroy']);
     });
 });
