@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\v1\AkunController;
 use App\Http\Controllers\v1\Auth\AuthController;
 use App\Http\Controllers\v1\KategoriController;
 use App\Http\Controllers\v1\SubKategoriController;
@@ -33,5 +34,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/sub-kategori', [SubKategoriController::class, 'store']);
         Route::put('/sub-kategori/{id}', [SubKategoriController::class, 'update']);
         Route::delete('/sub-kategori/{id}', [SubKategoriController::class, 'destroy']);
+
+        Route::get('/akun', [AkunController::class, 'index']);
+        Route::get('/akun/{id}', [AkunController::class, 'show']);
+        Route::post('/akun', [AkunController::class, 'store']);
+        Route::put('/akun/{id}', [AkunController::class, 'update']);
+        Route::delete('/akun/{id}', [AkunController::class, 'destroy']);
     });
 });
