@@ -51,7 +51,7 @@ class KategoriController extends Controller
             return response()->json([
                 'code' => 422,
                 'success' => false,
-                'messages' => $validator->errors(),
+                'errors' => $validator->errors(),
             ]);
         }
 
@@ -89,7 +89,7 @@ class KategoriController extends Controller
             return response()->json([
                 'code' => 422,
                 'success' => false,
-                'messages' => $validator->errors(),
+                'errors' => $validator->errors(),
             ]);
         }
 
