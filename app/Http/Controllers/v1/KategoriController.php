@@ -3,21 +3,19 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ResponseHelper;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class KategoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = Kategori::all();
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Sukses',
-            'data' => $kategori,
-        ]);
+        $per_page = $request->input('per_page', 10);
+        $kategori = Kategori::orderBy('kode_kategori')->paginate($per_page);
+        return ResponseHelper::success($kategori, 'Sukses');
     }
 
     public function show($id)
@@ -25,19 +23,10 @@ class KategoriController extends Controller
         $kategori = Kategori::find($id);
 
         if (!$kategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Sukses',
-            'data' => $kategori
-        ]);
+        return ResponseHelper::success($kategori, 'Sukses');
     }
 
     public function store(Request $request)
@@ -48,11 +37,7 @@ class KategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'errors' => $validator->errors(),
-            ]);
+            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $kategori = Kategori::create([
@@ -60,12 +45,7 @@ class KategoriController extends Controller
             'kode_kategori' => $request->input('kode_kategori'),
         ]);
 
-        return response()->json([
-            'code' => 201,
-            'success' => true,
-            'messages' => 'Kategori berhasil ditambahkan',
-            'data' => $kategori
-        ]);
+        return ResponseHelper::success($kategori, 'Kategori berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -73,11 +53,7 @@ class KategoriController extends Controller
         $kategori = Kategori::find($id);
 
         if (!$kategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $validator = Validator::make($request->all(), [
@@ -86,11 +62,7 @@ class KategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'errors' => $validator->errors(),
-            ]);
+            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $kategori->update([
@@ -98,12 +70,7 @@ class KategoriController extends Controller
             'kode_kategori' => $request->input('kode_kategori'),
         ]);
 
-        return response()->json([
-            'code' => 201,
-            'success' => true,
-            'messages' => 'Kategori berhasil diperbarui',
-            'data' => $kategori
-        ]);
+        return ResponseHelper::success($kategori, 'Kategori berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -111,19 +78,11 @@ class KategoriController extends Controller
         $kategori = Kategori::find($id);
 
         if (!$kategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $kategori->delete();
 
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Kategori berhasil dihapus',
-        ]);
+        return ResponseHelper::success([], 'Kategori berhasil dihapus');
     }
 }
