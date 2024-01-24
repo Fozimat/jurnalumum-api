@@ -52,7 +52,7 @@ class SubKategoriController extends Controller
             return response()->json([
                 'code' => 422,
                 'success' => false,
-                'messages' => $validator->errors(),
+                'errors' => $validator->errors(),
             ]);
         }
 
@@ -92,7 +92,7 @@ class SubKategoriController extends Controller
             return response()->json([
                 'code' => 422,
                 'success' => false,
-                'messages' => $validator->errors(),
+                'errors' => $validator->errors(),
             ]);
         }
 
