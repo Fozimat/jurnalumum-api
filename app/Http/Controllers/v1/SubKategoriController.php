@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\SubKategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Response;
 
 class SubKategoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subKategori = SubKategori::with('kategori')->get();
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Sukses',
-            'data' => $subKategori,
-        ]);
+        $per_page = $request->input('per_page', 10);
+        $subKategori = SubKategori::with('kategori')->paginate($per_page);
+        return ResponseHelper::success($subKategori, 'Sukses');
     }
 
     public function show($id)
@@ -25,19 +23,10 @@ class SubKategoriController extends Controller
         $subKategori = SubKategori::with('kategori')->find($id);
 
         if (!$subKategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Sub Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Sukses',
-            'data' => $subKategori
-        ]);
+        return ResponseHelper::success($subKategori, 'Sukses');
     }
 
     public function store(Request $request)
@@ -49,11 +38,7 @@ class SubKategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'errors' => $validator->errors(),
-            ]);
+            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subKategori = SubKategori::create([
@@ -62,12 +47,7 @@ class SubKategoriController extends Controller
             'kode_sub_kategori' => $request->input('kode_sub_kategori'),
         ]);
 
-        return response()->json([
-            'code' => 201,
-            'success' => true,
-            'messages' => 'Sub Kategori berhasil ditambahkan',
-            'data' => $subKategori
-        ]);
+        return ResponseHelper::success($subKategori, 'Sub Kategori berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -75,11 +55,7 @@ class SubKategoriController extends Controller
         $subKategori = SubKategori::find($id);
 
         if (!$subKategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Sub Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $validator = Validator::make($request->all(), [
@@ -89,11 +65,7 @@ class SubKategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'errors' => $validator->errors(),
-            ]);
+            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subKategori->update([
@@ -102,12 +74,7 @@ class SubKategoriController extends Controller
             'kode_sub_kategori' => $request->input('kode_sub_kategori'),
         ]);
 
-        return response()->json([
-            'code' => 201,
-            'success' => true,
-            'messages' => 'Sub Kategori berhasil diperbarui',
-            'data' => $subKategori
-        ]);
+        return ResponseHelper::success($subKategori, 'Sub Kategori berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -115,19 +82,11 @@ class SubKategoriController extends Controller
         $subKategori = SubKategori::find($id);
 
         if (!$subKategori) {
-            return response()->json([
-                'code' => 404,
-                'success' => false,
-                'messages' => 'Sub Kategori tidak ditemukan',
-            ]);
+            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $subKategori->delete();
 
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Sub Kategori berhasil dihapus',
-        ]);
+        return ResponseHelper::success([], 'Sub Kategori berhasil dihapus');
     }
 }
