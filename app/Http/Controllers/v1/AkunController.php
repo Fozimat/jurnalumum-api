@@ -46,12 +46,18 @@ class AkunController extends Controller
             'sub_kategori_id' => 'required|exists:sub_kategori,id',
             'nama_akun' => 'required|string|max:255',
             'kode_akun' => 'required|string|max:50|unique:akun',
+            'saldo_awal' => 'required|numeric',
+            'tanggal_saldo_awal' => 'required|date',
+            'saldo' => 'required|numeric'
         ]);
 
         $akun = Akun::create([
             'sub_kategori_id' => $request->input('sub_kategori_id'),
             'nama_akun' => $request->input('nama_akun'),
             'kode_akun' => $request->input('kode_akun'),
+            'saldo_awal' => $request->input('saldo_awal'),
+            'tanggal_saldo_awal' => $request->input('tanggal_saldo_awal'),
+            'saldo' => $request->input('saldo'),
         ]);
 
         return response()->json([
@@ -78,12 +84,18 @@ class AkunController extends Controller
             'sub_kategori_id' => 'required|exists:sub_kategori,id',
             'nama_akun' => 'required|string|max:255',
             'kode_akun' => 'required|string|max:50|unique:akun,kode_akun,' . $id,
+            'saldo_awal' => 'required|numeric',
+            'tanggal_saldo_awal' => 'required|date',
+            'saldo' => 'required|numeric'
         ]);
 
         $akun->update([
             'sub_kategori_id' => $request->input('sub_kategori_id'),
             'nama_akun' => $request->input('nama_akun'),
             'kode_akun' => $request->input('kode_akun'),
+            'saldo_awal' => $request->input('saldo_awal'),
+            'tanggal_saldo_awal' => $request->input('tanggal_saldo_awal'),
+            'saldo' => $request->input('saldo'),
         ]);
 
         return response()->json([
