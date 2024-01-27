@@ -12,7 +12,7 @@ class Akun extends Model
     protected $table = 'akun';
 
     protected $fillable = [
-        'sub_kategori_id', 'nama_akun', 'kode_akun',
+        'sub_kategori_id', 'nama_akun', 'kode_akun', 'saldo_awal', 'tanggal_saldo_awal', 'saldo'
     ];
 
     public function subKategori()
