@@ -14,7 +14,19 @@ class SubKategoriController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->input('per_page', 10);
-        $subKategori = SubKategori::with('kategori')->paginate($per_page);
+        $query = SubKategori::with('kategori');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('nama_sub_kategori', 'like', "%$search%")
+                ->orWhere('kode_sub_kategori', 'like', "%$search%")
+                ->orWhereHas('kategori', function ($q) use ($search) {
+                    $q->where('nama_kategori', 'like', "%$search%");
+                });
+        }
+
+        $subKategori = $query->paginate($per_page);
+
         return ResponseHelper::success($subKategori, 'Sukses');
     }
 
