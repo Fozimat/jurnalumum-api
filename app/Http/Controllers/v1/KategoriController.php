@@ -14,7 +14,16 @@ class KategoriController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->input('per_page', 10);
-        $kategori = Kategori::orderBy('kode_kategori')->paginate($per_page);
+        $query = Kategori::orderBy('kode_kategori');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('nama_kategori', 'like', "%$search%")
+                ->orWhere('kode_kategori', 'like', "%$search%");
+        }
+
+        $kategori = $query->paginate($per_page);
+
         return ResponseHelper::success($kategori, 'Sukses');
     }
 
