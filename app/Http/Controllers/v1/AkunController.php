@@ -81,7 +81,6 @@ class AkunController extends Controller
             'kode_akun' => 'required|string|max:50|unique:akun,kode_akun,' . $id,
             'saldo_awal' => 'required|numeric',
             'tanggal_saldo_awal' => 'required|date',
-            'saldo' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -94,7 +93,7 @@ class AkunController extends Controller
             'kode_akun' => $request->input('kode_akun'),
             'saldo_awal' => $request->input('saldo_awal'),
             'tanggal_saldo_awal' => $request->input('tanggal_saldo_awal'),
-            'saldo' => $request->input('saldo'),
+            'saldo' => $request->input('saldo_awal'),
         ]);
 
         return ResponseHelper::success($akun, 'Akun berhasil diperbarui', Response::HTTP_CREATED);
