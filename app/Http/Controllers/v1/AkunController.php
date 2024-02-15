@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Akun;
+use App\Models\SubKategori;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +28,17 @@ class AkunController extends Controller
         }
 
         return ResponseHelper::success($akun, 'Sukses');
+    }
+
+    public function showSubKategori($id)
+    {
+        $subKategori = SubKategori::where('kategori_id', $id)->get();
+
+        if (!$subKategori) {
+            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
+        }
+
+        return ResponseHelper::success($subKategori, 'Sukses');
     }
 
     public function store(Request $request)

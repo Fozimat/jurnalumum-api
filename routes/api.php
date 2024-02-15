@@ -37,6 +37,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/akun', [AkunController::class, 'index']);
         Route::get('/akun/{id}', [AkunController::class, 'show']);
+        Route::get('/akun/sub-kategori/{id}', [AkunController::class, 'showSubKategori']);
         Route::post('/akun', [AkunController::class, 'store']);
         Route::put('/akun/{id}', [AkunController::class, 'update']);
         Route::delete('/akun/{id}', [AkunController::class, 'destroy']);
