@@ -15,7 +15,22 @@ class AkunController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->input('per_page', 10);
-        $akun = Akun::with('subKategori.kategori')->paginate($per_page);
+        $query = Akun::with('subKategori.kategori');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('nama_akun', 'like', "%$search%")
+                ->orWhere('kode_akun', 'like', "%$search%")
+                ->orWhere('saldo', 'like', "%$search%")
+                ->orWhereHas('subKategori', function ($q) use ($search) {
+                    $q->where('nama_sub_kategori', 'like', "%$search%");
+                })->orWhereHas('subKategori.kategori', function ($q) use ($search) {
+                    $q->where('nama_kategori', 'like', "%$search%");
+                });
+        }
+
+        $akun = $query->paginate($per_page);
+
         return ResponseHelper::success($akun, 'Sukses');
     }
 
