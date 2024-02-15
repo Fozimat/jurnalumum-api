@@ -49,7 +49,7 @@ class AkunController extends Controller
             'kode_akun' => $request->input('kode_akun'),
             'saldo_awal' => $request->input('saldo_awal'),
             'tanggal_saldo_awal' => $request->input('tanggal_saldo_awal'),
-            'saldo' => $request->input('saldo'),
+            'saldo' => $request->input('saldo_awal'),
         ]);
 
         return ResponseHelper::success($akun, 'Akun berhasil ditambahkan', Response::HTTP_CREATED);
