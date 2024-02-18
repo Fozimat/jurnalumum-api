@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\v1\AkunController;
 use App\Http\Controllers\v1\Auth\AuthController;
+use App\Http\Controllers\v1\JurnalController;
 use App\Http\Controllers\v1\KategoriController;
 use App\Http\Controllers\v1\SubKategoriController;
 use Illuminate\Support\Facades\Route;
@@ -41,5 +42,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/akun', [AkunController::class, 'store']);
         Route::put('/akun/{id}', [AkunController::class, 'update']);
         Route::delete('/akun/{id}', [AkunController::class, 'destroy']);
+
+        Route::get('/jurnal', [JurnalController::class, 'index']);
+        Route::post('/jurnal', [JurnalController::class, 'store']);
     });
 });
