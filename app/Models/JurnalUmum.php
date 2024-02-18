@@ -12,11 +12,11 @@ class JurnalUmum extends Model
     protected $table = 'jurnal_umum';
 
     protected $fillable = [
-        'tanggal', 'keterangan',
+        'tanggal', 'keterangan', 'kode_transaksi'
     ];
 
     public function detailJurnal()
     {
-        return $this->hasMany(DetailJurnal::class);
+        return $this->hasMany(DetailJurnal::class, 'jurnal_id');
     }
 }

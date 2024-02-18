@@ -12,16 +12,16 @@ class DetailJurnal extends Model
     protected $table = 'detail_jurnal';
 
     protected $fillable = [
-        'id_jurnal', 'id_akun', 'debit', 'kredit',
+        'jurnal_id', 'akun_id', 'debit', 'kredit',
     ];
 
     public function jurnalUmum()
     {
-        return $this->belongsTo(JurnalUmum::class, 'id_jurnal');
+        return $this->belongsTo(JurnalUmum::class, 'jurnal_id');
     }
 
     public function akun()
     {
-        return $this->belongsTo(Akun::class, 'id_akun');
+        return $this->belongsTo(Akun::class, 'akun_id');
     }
 }
