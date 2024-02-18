@@ -17,7 +17,15 @@ class JurnalController extends Controller
     public function index(Request $request)
     {
         $per_page = $request->input('per_page', 10);
-        $query = JurnalUmum::with('detailJurnal');
+        $query = JurnalUmum::join('detail_jurnal', 'jurnal_umum.id', '=', 'detail_jurnal.jurnal_id')
+            ->select('jurnal_umum.id', 'jurnal_umum.tanggal', 'jurnal_umum.keterangan', DB::raw('SUM(detail_jurnal.debit) as total'), DB::raw('MAX(jurnal_umum.kode_transaksi) as kode_transaksi'))
+            ->groupBy('jurnal_umum.id', 'jurnal_umum.tanggal', 'jurnal_umum.keterangan');
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('jurnal_umum.keterangan', 'like', "%$search%")
+                ->orWhere('jurnal_umum.kode_transaksi', 'like', "%$search%");
+        }
 
         $jurnal = $query->paginate($per_page);
         return ResponseHelper::success($jurnal);
