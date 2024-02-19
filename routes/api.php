@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/akun/{id}', [AkunController::class, 'destroy']);
 
         Route::get('/jurnal', [JurnalController::class, 'index']);
+        Route::get('/jurnal/{id}', [JurnalController::class, 'show']);
         Route::post('/jurnal', [JurnalController::class, 'store']);
     });
 });

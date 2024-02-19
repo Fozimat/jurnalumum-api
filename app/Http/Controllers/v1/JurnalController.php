@@ -31,6 +31,17 @@ class JurnalController extends Controller
         return ResponseHelper::success($jurnal);
     }
 
+    public function show($id)
+    {
+        $jurnal = JurnalUmum::with('detailJurnal.akun')->where('id', $id)->get();
+
+        if (!$jurnal) {
+            return ResponseHelper::error('Jurnal tidak ditemukan', Response::HTTP_NOT_FOUND);
+        }
+
+        return ResponseHelper::success($jurnal);
+    }
+
     public function store(Request $request)
     {
         $input = $request->validate([
