@@ -18,9 +18,6 @@ class AkunTableSeeder extends Seeder
             ['sub_kategori_id' => 1, 'nama_akun' => 'Bank BNI', 'kode_akun' => '1101', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
             ['sub_kategori_id' => 1, 'nama_akun' => 'Bank BCA', 'kode_akun' => '1102', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
 
-            ['sub_kategori_id' => 2, 'nama_akun' => 'Piutang Usaha Pihak Ketiga', 'kode_akun' => '1201', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
-            ['sub_kategori_id' => 2, 'nama_akun' => 'Piutang Lainnya', 'kode_akun' => '1202', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
-
             ['sub_kategori_id' => 3, 'nama_akun' => 'Hutang Usaha Pihak Ketiga', 'kode_akun' => '2101', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
             ['sub_kategori_id' => 3, 'nama_akun' => 'Hutang Usaha Lainnya', 'kode_akun' => '2102', 'saldo_awal' => 1000000, 'tanggal_saldo_awal' => '2024-01-28', 'saldo' => 1000000],
 
