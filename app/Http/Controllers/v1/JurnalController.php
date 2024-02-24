@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Akun;
 use App\Models\DetailJurnal;
 use App\Models\JurnalUmum;
+use App\Models\SubKategori;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -79,19 +80,37 @@ class JurnalController extends Controller
                 ]);
 
                 $akun = Akun::find($entry['akun_id']);
+                $subCategory = SubKategori::find($akun->sub_kategori_id);
 
-                if ($entry['kredit'] > $akun->saldo) {
-                    DB::rollBack();
-                    return ResponseHelper::error('Saldo tidak mencukupi', Response::HTTP_UNPROCESSABLE_ENTITY);
+                /**
+                 * Saldo Normal Aktiva (id: 1) dan Beban (id: 5) ada di Debit
+                 * Saldo Normal Hutang, Modal, dan Pendapatan ada di Kredit
+                 */
+
+                $saldoDebit = in_array($subCategory->kategori_id, [1, 5]);
+
+                if ($saldoDebit) {
+                    if ($entry['kredit'] > $akun->saldo) {
+                        DB::rollBack();
+                        return ResponseHelper::error('Saldo tidak mencukupi', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    if ($entry['debit'] > 0) {
+                        $akun->saldo += $entry['debit'];
+                    } else {
+                        $akun->saldo -= $entry['kredit'];
+                    }
+                } else {
+                    if ($entry['debit'] > $akun->saldo) {
+                        DB::rollBack();
+                        return ResponseHelper::error('Kelebihan pembayaran', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    if ($entry['kredit'] > 0) {
+                        $akun->saldo += $entry['kredit'];
+                    } else {
+                        $akun->saldo -= $entry['debit'];
+                    }
                 }
 
-                if ($entry['debit'] > 0) {
-                    $akun->saldo += $entry['debit'];
-                }
-
-                if ($entry['kredit'] > 0) {
-                    $akun->saldo -= $entry['kredit'];
-                }
                 $akun->save();
             }
 
