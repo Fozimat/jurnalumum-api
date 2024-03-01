@@ -4,6 +4,7 @@ use App\Http\Controllers\v1\AkunController;
 use App\Http\Controllers\v1\Auth\AuthController;
 use App\Http\Controllers\v1\JurnalController;
 use App\Http\Controllers\v1\KategoriController;
+use App\Http\Controllers\v1\LaporanLabaRugiController;
 use App\Http\Controllers\v1\SubKategoriController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +55,10 @@ Route::prefix('v1')->group(function () {
             Route::get('/', [JurnalController::class, 'index']);
             Route::get('/{id}', [JurnalController::class, 'show']);
             Route::post('/', [JurnalController::class, 'store']);
+        });
+
+        Route::prefix('laporan')->group(function () {
+            Route::get('/laba-rugi', [LaporanLabaRugiController::class, 'index']);
         });
     });
 });
