@@ -29,7 +29,11 @@ class AkunController extends Controller
                 });
         }
 
-        $akun = $query->paginate($per_page);
+        if ($request->has('paginate') && $request->input('paginate') == 'false') {
+            $akun = $query->get();
+        } else {
+            $akun = $query->paginate($per_page);
+        }
 
         return ResponseHelper::success($akun, 'Sukses');
     }
