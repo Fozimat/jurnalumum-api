@@ -59,6 +59,7 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('laporan')->group(function () {
             Route::get('/laba-rugi', [LaporanLabaRugiController::class, 'index']);
+            Route::get('/laba-rugi/export', [LaporanLabaRugiController::class, 'export']);
         });
     });
 });

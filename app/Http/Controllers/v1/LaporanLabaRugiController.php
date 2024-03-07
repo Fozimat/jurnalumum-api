@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Exports\LabaRugiExport;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Akun;
@@ -9,6 +10,7 @@ use App\Models\DetailJurnal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanLabaRugiController extends Controller
 {
@@ -65,5 +67,31 @@ class LaporanLabaRugiController extends Controller
         }
 
         return $debitKredit;
+    }
+
+    public function getDataToExport(Request $request)
+    {
+        $month = $request->input('month');
+        $startMonth = Carbon::parse($month)->startOfMonth();
+        $endMonth = Carbon::parse($month)->endOfMonth();
+
+        $akunPendapatan = $this->getAkunByKategori('Pendapatan');
+        $akunBeban = $this->getAkunByKategori('Beban');
+
+        $pendapatan = $this->getDebitKreditAkun($akunPendapatan, $startMonth, $endMonth);
+        $beban = $this->getDebitKreditAkun($akunBeban, $startMonth, $endMonth);
+
+        $response = [
+            'pendapatan' => $pendapatan,
+            'beban' => $beban
+        ];
+
+        return $response;
+    }
+
+    public function export(Request $request)
+    {
+        $data = $this->getDataToExport($request);
+        return Excel::download(new LabaRugiExport($data), 'laba-rugi.xlsx');
     }
 }
