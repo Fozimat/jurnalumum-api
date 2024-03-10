@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\v1\AkunController;
 use App\Http\Controllers\v1\Auth\AuthController;
+use App\Http\Controllers\v1\CardController;
 use App\Http\Controllers\v1\JurnalController;
 use App\Http\Controllers\v1\KategoriController;
 use App\Http\Controllers\v1\LaporanLabaRugiController;
@@ -60,6 +61,13 @@ Route::prefix('v1')->group(function () {
         Route::prefix('laporan')->group(function () {
             Route::get('/laba-rugi', [LaporanLabaRugiController::class, 'index']);
             Route::get('/laba-rugi/export', [LaporanLabaRugiController::class, 'export']);
+        });
+
+        Route::prefix('card')->group(function () {
+            Route::get('/kategori', [CardController::class, 'kategori']);
+            Route::get('/sub-kategori', [CardController::class, 'subKategori']);
+            Route::get('/akun', [CardController::class, 'akun']);
+            Route::get('/jurnal', [CardController::class, 'jurnalUmum']);
         });
     });
 });
