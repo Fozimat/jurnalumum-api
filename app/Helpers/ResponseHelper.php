@@ -13,7 +13,7 @@ class ResponseHelper
             'success' => true,
             'messages' => $message,
             'data' => $data,
-        ]);
+        ], $code);
     }
 
     public static function error($message = 'Error', $code = Response::HTTP_BAD_REQUEST)
@@ -22,7 +22,7 @@ class ResponseHelper
             'code' => $code,
             'success' => false,
             'messages' => $message,
-        ]);
+        ], $code);
     }
 
     public static function currency($total)
