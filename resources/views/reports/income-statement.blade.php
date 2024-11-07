@@ -16,7 +16,7 @@
                 <tr>
                     <td>{{ $item['account_code'] }}</td>
                     <td>{{ $item['account_name'] }}</td>
-                    <td>{{ \App\Helpers\ResponseHelper::currency($item['total'], 0, ',', '.') }}</td>
+                    <td>{{ \App\Helpers\GeneralHelper::currency($item['total'], 0, ',', '.') }}</td>
                 </tr>
                 @php
                     $totalIncome += $item['total'];
@@ -25,7 +25,7 @@
             <tr>
                 <td></td>
                 <td>Total Pendapatan</td>
-                <td>{{ \App\Helpers\ResponseHelper::currency($totalIncome, 0, ',', '.') }}</td>
+                <td>{{ \App\Helpers\GeneralHelper::currency($totalIncome, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
@@ -49,7 +49,7 @@
                 <tr>
                     <td>{{ $item['account_code'] }}</td>
                     <td>{{ $item['account_name'] }}</td>
-                    <td>{{ \App\Helpers\ResponseHelper::currency($item['total'], 0, ',', '.') }}</td>
+                    <td>{{ \App\Helpers\GeneralHelper::currency($item['total'], 0, ',', '.') }}</td>
                 </tr>
                 @php
                     $totalExpense += $item['total'];
@@ -58,7 +58,7 @@
             <tr>
                 <td></td>
                 <td>Total Beban</td>
-                <td>Rp. {{ \App\Helpers\ResponseHelper::currency($totalExpense, 0, ',', '.') }}</td>
+                <td>Rp. {{ \App\Helpers\GeneralHelper::currency($totalExpense, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

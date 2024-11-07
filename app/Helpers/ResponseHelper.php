@@ -24,9 +24,4 @@ class ResponseHelper
             'messages' => $message,
         ], $code);
     }
-
-    public static function currency($total)
-    {
-        return 'Rp.' . number_format($total, 0, '', '.');
-    }
 }
