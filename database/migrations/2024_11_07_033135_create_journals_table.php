@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('akun', function (Blueprint $table) {
-            $table->bigInteger('saldo_awal')->after('kode_akun');
-            $table->date('tanggal_saldo_awal')->after('saldo_awal')->nullable();
-            $table->bigInteger('saldo')->after('tanggal_saldo_awal');
+        Schema::create('journals', function (Blueprint $table) {
+            $table->id();
+            $table->string('transaction_code');
+            $table->date('date');
+            $table->string('description')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -23,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('akun', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('journals');
     }
 };

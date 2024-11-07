@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\v1\AkunController;
-use App\Http\Controllers\v1\Auth\AuthController;
-use App\Http\Controllers\v1\CardController;
-use App\Http\Controllers\v1\JurnalController;
-use App\Http\Controllers\v1\KategoriController;
-use App\Http\Controllers\v1\LaporanLabaRugiController;
-use App\Http\Controllers\v1\SubKategoriController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\v1\CardController;
+use App\Http\Controllers\v1\AccountController;
+use App\Http\Controllers\v1\JournalController;
+use App\Http\Controllers\v1\CategoryController;
+use App\Http\Controllers\v1\Auth\AuthController;
+use App\Http\Controllers\v1\SubCategoryController;
+use App\Http\Controllers\v1\IncomeStatementReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,47 +27,44 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-        Route::prefix('kategori')->group(function () {
-            Route::get('/', [KategoriController::class, 'index']);
-            Route::get('/{id}', [KategoriController::class, 'show']);
-            Route::post('/', [KategoriController::class, 'store']);
-            Route::put('/{id}', [KategoriController::class, 'update']);
-            Route::delete('/{id}', [KategoriController::class, 'destroy']);
+        Route::prefix('categories')->group(function () {
+            Route::get('/', [CategoryController::class, 'index']);
+            Route::get('/{id}', [CategoryController::class, 'show']);
+            Route::post('/', [CategoryController::class, 'store']);
+            Route::put('/{id}', [CategoryController::class, 'update']);
+            Route::delete('/{id}', [CategoryController::class, 'destroy']);
         });
 
-        Route::prefix('sub-kategori')->group(function () {
-            Route::get('/', [SubKategoriController::class, 'index']);
-            Route::get('/{id}', [SubKategoriController::class, 'show']);
-            Route::post('/', [SubKategoriController::class, 'store']);
-            Route::put('/{id}', [SubKategoriController::class, 'update']);
-            Route::delete('/{id}', [SubKategoriController::class, 'destroy']);
+        Route::prefix('subcategories')->group(function () {
+            Route::get('/', [SubCategoryController::class, 'index']);
+            Route::get('/{id}', [SubCategoryController::class, 'show']);
+            Route::post('/', [SubCategoryController::class, 'store']);
+            Route::put('/{id}', [SubCategoryController::class, 'update']);
+            Route::delete('/{id}', [SubCategoryController::class, 'destroy']);
         });
 
-        Route::prefix('akun')->group(function () {
-            Route::get('/', [AkunController::class, 'index']);
-            Route::get('/{id}', [AkunController::class, 'show']);
-            Route::get('/sub-kategori/{id}', [AkunController::class, 'showSubKategori']);
-            Route::post('/', [AkunController::class, 'store']);
-            Route::put('/{id}', [AkunController::class, 'update']);
-            Route::delete('/{id}', [AkunController::class, 'destroy']);
+        Route::prefix('accounts')->group(function () {
+            Route::get('/', [AccountController::class, 'index']);
+            Route::get('/{id}', [AccountController::class, 'show']);
+            Route::get('/subcategory/{id}', [AccountController::class, 'showSubcategory']);
+            Route::post('/', [AccountController::class, 'store']);
+            Route::put('/{id}', [AccountController::class, 'update']);
+            Route::delete('/{id}', [AccountController::class, 'destroy']);
         });
 
-        Route::prefix('jurnal')->group(function () {
-            Route::get('/', [JurnalController::class, 'index']);
-            Route::get('/{id}', [JurnalController::class, 'show']);
-            Route::post('/', [JurnalController::class, 'store']);
+        Route::prefix('journals')->group(function () {
+            Route::get('/', [JournalController::class, 'index']);
+            Route::get('/{id}', [JournalController::class, 'show']);
+            Route::post('/', [JournalController::class, 'store']);
         });
 
-        Route::prefix('laporan')->group(function () {
-            Route::get('/laba-rugi', [LaporanLabaRugiController::class, 'index']);
-            Route::get('/laba-rugi/export', [LaporanLabaRugiController::class, 'export']);
+        Route::prefix('reports')->group(function () {
+            Route::get('/income-statement', [IncomeStatementReportController::class, 'index']);
+            Route::get('/income-statement/export', [IncomeStatementReportController::class, 'export']);
         });
 
-        Route::prefix('card')->group(function () {
-            Route::get('/kategori', [CardController::class, 'kategori']);
-            Route::get('/sub-kategori', [CardController::class, 'subKategori']);
-            Route::get('/akun', [CardController::class, 'akun']);
-            Route::get('/jurnal', [CardController::class, 'jurnalUmum']);
+        Route::prefix('cards')->group(function () {
+            Route::get('/', [CardController::class, 'index']);
         });
     });
 });

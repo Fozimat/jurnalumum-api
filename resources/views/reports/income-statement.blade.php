@@ -10,22 +10,22 @@
         </thead>
         <tbody>
             @php
-                $totalPendapatan = 0;
+                $totalIncome = 0;
             @endphp
             @foreach ($data['pendapatan'] as $item)
                 <tr>
-                    <td>{{ $item['kode_akun'] }}</td>
-                    <td>{{ $item['nama_akun'] }}</td>
+                    <td>{{ $item['account_code'] }}</td>
+                    <td>{{ $item['account_name'] }}</td>
                     <td>{{ \App\Helpers\ResponseHelper::currency($item['total'], 0, ',', '.') }}</td>
                 </tr>
                 @php
-                    $totalPendapatan += $item['total'];
+                    $totalIncome += $item['total'];
                 @endphp
             @endforeach
             <tr>
                 <td></td>
                 <td>Total Pendapatan</td>
-                <td>{{ \App\Helpers\ResponseHelper::currency($totalPendapatan, 0, ',', '.') }}</td>
+                <td>{{ \App\Helpers\ResponseHelper::currency($totalIncome, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
@@ -43,7 +43,7 @@
         </thead>
         <tbody>
             @php
-                $totalBeban = 0;
+                $totalExpense = 0;
             @endphp
             @foreach ($data['beban'] as $item)
                 <tr>
@@ -52,13 +52,13 @@
                     <td>{{ \App\Helpers\ResponseHelper::currency($item['total'], 0, ',', '.') }}</td>
                 </tr>
                 @php
-                    $totalBeban += $item['total'];
+                    $totalExpense += $item['total'];
                 @endphp
             @endforeach
             <tr>
                 <td></td>
                 <td>Total Beban</td>
-                <td>Rp. {{ \App\Helpers\ResponseHelper::currency($totalBeban, 0, ',', '.') }}</td>
+                <td>Rp. {{ \App\Helpers\ResponseHelper::currency($totalExpense, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

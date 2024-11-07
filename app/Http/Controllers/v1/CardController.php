@@ -4,30 +4,25 @@ namespace App\Http\Controllers\v1;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Akun;
-use App\Models\JurnalUmum;
-use App\Models\Kategori;
-use App\Models\SubKategori;
+use App\Models\Account;
+use App\Models\Category;
+use App\Models\Journal;
+use App\Models\Subcategory;
 
 class CardController extends Controller
 {
-    public function kategori()
+    public function index()
     {
-        return ResponseHelper::success(Kategori::count());
-    }
+        $total_categories = Category::count();
+        $total_subcategories = Subcategory::count();
+        $total_accounts = Account::count();
+        $total_journals = Journal::count();
 
-    public function subKategori()
-    {
-        return ResponseHelper::success(SubKategori::count());
-    }
-
-    public function akun()
-    {
-        return ResponseHelper::success(Akun::count());
-    }
-
-    public function jurnalUmum()
-    {
-        return ResponseHelper::success(JurnalUmum::count());
+        return ResponseHelper::success([
+            'total_categories' => $total_categories,
+            'total_subcategories' => $total_subcategories,
+            'total_accounts' => $total_accounts,
+            'total_journals' => $total_journals,
+        ]);
     }
 }

@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_jurnal', function (Blueprint $table) {
+        Schema::create('journal_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('jurnal_id');
-            $table->unsignedBigInteger('akun_id');
+            $table->unsignedBigInteger('journal_id');
+            $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('debit');
-            $table->unsignedBigInteger('kredit');
+            $table->unsignedBigInteger('credit');
             $table->timestamps();
 
-            $table->foreign('jurnal_id')->references('id')->on('jurnal_umum')->onDelete('cascade');
-            $table->foreign('akun_id')->references('id')->on('akun')->onDelete('cascade');
+            $table->foreign('journal_id')->references('id')->on('journals')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_jurnal');
+        Schema::dropIfExists('journal_details');
     }
 };

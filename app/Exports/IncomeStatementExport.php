@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
-class LabaRugiExport implements FromView, ShouldAutoSize, WithEvents
+class IncomeStatementExport implements FromView, ShouldAutoSize, WithEvents
 {
     use RegistersEventListeners;
 
@@ -22,7 +22,7 @@ class LabaRugiExport implements FromView, ShouldAutoSize, WithEvents
 
     public function view(): View
     {
-        return view('laporan.laba-rugi', ['data' => $this->data]);
+        return view('reports.income-statement', ['data' => $this->data]);
     }
 
     public static function afterSheet(AfterSheet $event)
