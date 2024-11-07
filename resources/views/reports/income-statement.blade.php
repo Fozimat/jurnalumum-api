@@ -1,4 +1,4 @@
-@if (!empty($data['pendapatan']))
+@if (!empty($data['income']))
     <h5>Pendapatan </h5>
     <table>
         <thead>
@@ -12,7 +12,7 @@
             @php
                 $totalIncome = 0;
             @endphp
-            @foreach ($data['pendapatan'] as $item)
+            @foreach ($data['income'] as $item)
                 <tr>
                     <td>{{ $item['account_code'] }}</td>
                     <td>{{ $item['account_name'] }}</td>
@@ -31,7 +31,7 @@
     </table>
 @endif
 
-@if (!empty($data['beban']))
+@if (!empty($data['expense']))
     <h5>Beban </h5>
     <table>
         <thead>
@@ -45,10 +45,10 @@
             @php
                 $totalExpense = 0;
             @endphp
-            @foreach ($data['beban'] as $item)
+            @foreach ($data['expense'] as $item)
                 <tr>
-                    <td>{{ $item['kode_akun'] }}</td>
-                    <td>{{ $item['nama_akun'] }}</td>
+                    <td>{{ $item['account_code'] }}</td>
+                    <td>{{ $item['account_name'] }}</td>
                     <td>{{ \App\Helpers\ResponseHelper::currency($item['total'], 0, ',', '.') }}</td>
                 </tr>
                 @php
