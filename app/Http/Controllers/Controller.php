@@ -42,19 +42,24 @@ class Controller extends BaseController
         return response()->json($response, $code);
     }
 
+
     /**
      * Send an error response with the given message and HTTP code.
      *
-     * @param string $message The message to be sent.
+     * @param string|array $message The error message to be sent.
      * @param int $code The HTTP code to be sent.
      * @return \Illuminate\Http\Response
      */
-    public static function sendError($message = 'Error', $code = Response::HTTP_BAD_REQUEST)
+    public static function sendError($message, $code = Response::HTTP_BAD_REQUEST)
     {
+        if (is_array($message)) {
+            $message = implode(', ', $message);
+        }
+
         $response = [
             'code' => $code,
             'success' => false,
-            'messages' => $message,
+            'message' => $message,
         ];
 
         return response()->json($response, $code);

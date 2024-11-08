@@ -45,7 +45,7 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category = Category::create([
@@ -53,7 +53,7 @@ class CategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse($category, 'Category berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Category berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -70,7 +70,7 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category->update([
@@ -78,7 +78,7 @@ class CategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse($category, 'Category berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Category berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -91,6 +91,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return $this->sendResponse([], 'Category berhasil dihapus');
+        return $this->sendResponse('', 'Category berhasil dihapus');
     }
 }

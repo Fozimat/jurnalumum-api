@@ -50,7 +50,7 @@ class SubcategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subKategori = Subcategory::create([
@@ -77,7 +77,7 @@ class SubcategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subcategory->update([
@@ -86,7 +86,7 @@ class SubcategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse($subcategory, 'Sub Kategori berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse($subcategory, 'Sub Kategori berhasil diperbarui', Response::HTTP_OK);
     }
 
     public function destroy($id)

@@ -12,6 +12,7 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class JournalController extends Controller
@@ -20,8 +21,8 @@ class JournalController extends Controller
     {
         $per_page = $request->input('per_page', 10);
         $query = Journal::join('journal_details', 'journals.id', '=', 'journal_details.journal_id')
-            ->select('journals.id', 'journals.date', 'journals.description', DB::raw('SUM(journal_details.debit) as total'), DB::raw('MAX(journals.transaction_code) as transaction_transaction_code'))
-            ->groupBy('journals.id', 'journals.date', 'journals.description');
+            ->select('journals.id', 'journals.date', 'journals.description', DB::raw('SUM(journal_details.debit) as total'), 'journals.transaction_code')
+            ->groupBy('journals.id');
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -46,7 +47,7 @@ class JournalController extends Controller
 
     public function store(Request $request)
     {
-        $input = $request->validate([
+        $validator = Validator::make($request->all(), [
             'transaction_code' => ['required', 'string', Rule::unique(Journal::class, 'transaction_code')],
             'date' => ['required', 'date'],
             'description' => ['required', 'string'],
@@ -56,10 +57,14 @@ class JournalController extends Controller
             'detail.*.credit' => ['required', 'numeric'],
         ]);
 
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         DB::beginTransaction();
         try {
-            $total_debit = collect($input['detail'])->sum('debit');
-            $total_credit = collect($input['detail'])->sum('credit');
+            $total_debit = collect($request['detail'])->sum('debit');
+            $total_credit = collect($request['detail'])->sum('credit');
 
             if ($total_debit != $total_credit) {
                 DB::rollBack();
@@ -67,12 +72,12 @@ class JournalController extends Controller
             }
 
             $journal = Journal::create([
-                'transaction_code' => $input['transaction_code'],
-                'date' => $input['date'],
-                'description' => $input['description'],
+                'transaction_code' => $request['transaction_code'],
+                'date' => $request['date'],
+                'description' => $request['description'],
             ]);
 
-            foreach ($input['detail'] as $entry) {
+            foreach ($request['detail'] as $entry) {
                 JournalDetail::create([
                     'journal_id' => $journal->id,
                     'account_id' => $entry['account_id'],
@@ -88,9 +93,9 @@ class JournalController extends Controller
                  * Saldo Normal Hutang, Modal, dan Pendapatan ada di Kredit
                  */
 
-                $saldoDebit = in_array($subcategory->category_id, [1, 5]);
+                $debitBalance = in_array($subcategory->category_id, [1, 5]);
 
-                if ($saldoDebit) {
+                if ($debitBalance) {
                     if ($entry['credit'] > $account->balance) {
                         DB::rollBack();
                         return $this->sendError('Saldo tidak mencukupi', Response::HTTP_UNPROCESSABLE_ENTITY);

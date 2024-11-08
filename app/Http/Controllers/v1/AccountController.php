@@ -72,7 +72,7 @@ class AccountController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $account = Account::create([
@@ -104,7 +104,7 @@ class AccountController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $account->update([
