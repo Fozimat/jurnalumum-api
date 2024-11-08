@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\JournalRequest;
 use App\Http\Resources\JournalDetailResource;
 use App\Http\Resources\JournalResource;
 use App\Models\Account;
@@ -45,22 +46,8 @@ class JournalController extends Controller
         return $this->sendResponse(new JournalDetailResource($journal));
     }
 
-    public function store(Request $request)
+    public function store(JournalRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'transaction_code' => ['required', 'string', Rule::unique(Journal::class, 'transaction_code')],
-            'date' => ['required', 'date'],
-            'description' => ['required', 'string'],
-            'detail' => ['required', 'array'],
-            'detail.*.account_id' => ['required', Rule::exists(Account::class, 'id')],
-            'detail.*.debit' => ['required', 'numeric'],
-            'detail.*.credit' => ['required', 'numeric'],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         DB::beginTransaction();
         try {
             $total_debit = collect($request['detail'])->sum('debit');
@@ -121,7 +108,7 @@ class JournalController extends Controller
             }
 
             DB::commit();
-            return $this->sendResponse([], 'Jurnal berhasil ditambahkan', Response::HTTP_CREATED);
+            return $this->sendResponse('', 'Jurnal berhasil ditambahkan', Response::HTTP_CREATED);
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->sendError($exception->getLine() . ' ' . $exception->getMessage(), Response::HTTP_PRECONDITION_FAILED);

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SubcategoryRequest;
 use App\Http\Resources\SubcategoryResource;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 
 class SubcategoryController extends Controller
@@ -41,43 +41,23 @@ class SubcategoryController extends Controller
         return $this->sendResponse(new SubcategoryResource($subcategory), 'Sukses');
     }
 
-    public function store(Request $request)
+    public function store(SubcategoryRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:64',
-            'code' => 'required|string|max:64|unique:subcategories',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $subKategori = Subcategory::create([
+        Subcategory::create([
             'category_id' => $request->input('category_id'),
             'name' => $request->input('name'),
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse($subKategori, 'Sub Kategori berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Sub Kategori berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id)
+    public function update(SubcategoryRequest $request, $id)
     {
         $subcategory = Subcategory::find($id);
 
         if (!$subcategory) {
             return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:64',
-            'code' => 'required|string|max:64|unique:subcategories,code,' . $id,
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subcategory->update([
@@ -86,7 +66,7 @@ class SubcategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse($subcategory, 'Sub Kategori berhasil diperbarui', Response::HTTP_OK);
+        return $this->sendResponse('', 'Sub Kategori berhasil diperbarui', Response::HTTP_OK);
     }
 
     public function destroy($id)
@@ -99,6 +79,6 @@ class SubcategoryController extends Controller
 
         $subcategory->delete();
 
-        return $this->sendResponse([], 'Sub Kategori berhasil dihapus');
+        return $this->sendResponse('', 'Sub Kategori berhasil dihapus');
     }
 }

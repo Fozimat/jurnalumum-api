@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Http\Resources\SubcategoryResource;
 use App\Models\Account;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
@@ -61,21 +61,9 @@ class AccountController extends Controller
         return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategory)), 'Sukses');
     }
 
-    public function store(Request $request)
+    public function store(AccountRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:accounts',
-            'initial_balance' => 'required|numeric',
-            'initial_balance_date' => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $account = Account::create([
+        Account::create([
             'subcategory_id' => $request->input('subcategory_id'),
             'name' => $request->input('name'),
             'code' => $request->input('code'),
@@ -84,27 +72,15 @@ class AccountController extends Controller
             'balance' => $request->input('balance'),
         ]);
 
-        return $this->sendResponse($account, 'Account berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Account berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id)
+    public function update(AccountRequest $request, $id)
     {
         $account = Account::find($id);
 
         if (!$account) {
             return $this->sendError('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:accounts,code,' . $id,
-            'initial_balance' => 'required|numeric',
-            'initial_balance_date' => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $account->update([
@@ -116,7 +92,7 @@ class AccountController extends Controller
             'balance' => $request->input('balance'),
         ]);
 
-        return $this->sendResponse($account, 'Account berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Account berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -128,6 +104,6 @@ class AccountController extends Controller
         }
 
         $account->delete();
-        return $this->sendResponse([], 'Account berhasil dihapus');
+        return $this->sendResponse('', 'Account berhasil dihapus');
     }
 }

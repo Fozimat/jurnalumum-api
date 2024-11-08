@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 
 class CategoryController extends Controller
@@ -37,18 +37,9 @@ class CategoryController extends Controller
         return $this->sendResponse(new CategoryResource($category), 'Sukses');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:64',
-            'code' => 'required|string|max:64|unique:categories',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $category = Category::create([
+        Category::create([
             'name' => $request->input('name'),
             'code' => $request->input('code'),
         ]);
@@ -56,21 +47,12 @@ class CategoryController extends Controller
         return $this->sendResponse('', 'Category berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         $category = Category::find($id);
 
         if (!$category) {
             return $this->sendError('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:categories,code,' . $id,
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category->update([
