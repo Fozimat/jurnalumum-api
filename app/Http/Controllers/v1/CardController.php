@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Category;
@@ -18,7 +17,7 @@ class CardController extends Controller
         $total_accounts = Account::count();
         $total_journals = Journal::count();
 
-        return ResponseHelper::success([
+        return $this->sendResponse([
             'total_categories' => $total_categories,
             'total_subcategories' => $total_subcategories,
             'total_accounts' => $total_accounts,

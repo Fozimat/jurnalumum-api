@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SubcategoryResource;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +27,7 @@ class SubcategoryController extends Controller
 
         $subcategories = $query->paginate($per_page);
 
-        return ResponseHelper::success($subcategories, 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategories)), 'Sukses');
     }
 
     public function show($id)
@@ -35,10 +35,10 @@ class SubcategoryController extends Controller
         $subcategory = Subcategory::with('category')->find($id);
 
         if (!$subcategory) {
-            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return ResponseHelper::success($subcategory, 'Sukses');
+        return $this->sendResponse(new SubcategoryResource($subcategory), 'Sukses');
     }
 
     public function store(Request $request)
@@ -50,7 +50,7 @@ class SubcategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subKategori = Subcategory::create([
@@ -59,7 +59,7 @@ class SubcategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return ResponseHelper::success($subKategori, 'Sub Kategori berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse($subKategori, 'Sub Kategori berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -67,7 +67,7 @@ class SubcategoryController extends Controller
         $subcategory = Subcategory::find($id);
 
         if (!$subcategory) {
-            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $validator = Validator::make($request->all(), [
@@ -77,7 +77,7 @@ class SubcategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $subcategory->update([
@@ -86,7 +86,7 @@ class SubcategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return ResponseHelper::success($subcategory, 'Sub Kategori berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse($subcategory, 'Sub Kategori berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -94,11 +94,11 @@ class SubcategoryController extends Controller
         $subcategory = Subcategory::find($id);
 
         if (!$subcategory) {
-            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $subcategory->delete();
 
-        return ResponseHelper::success([], 'Sub Kategori berhasil dihapus');
+        return $this->sendResponse([], 'Sub Kategori berhasil dihapus');
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AccountResource;
+use App\Http\Resources\SubcategoryResource;
 use App\Models\Account;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class AccountController extends Controller
             $accounts = $query->paginate($per_page);
         }
 
-        return ResponseHelper::success($accounts, 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(AccountResource::collection($accounts)), 'Sukses');
     }
 
     public function show($id)
@@ -43,10 +44,10 @@ class AccountController extends Controller
         $account = Account::with('subcategory.category')->find($id);
 
         if (!$account) {
-            return ResponseHelper::error('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return ResponseHelper::success($account, 'Sukses');
+        return $this->sendResponse(new AccountResource($account), 'Sukses');
     }
 
     public function showSubcategory($id)
@@ -54,10 +55,10 @@ class AccountController extends Controller
         $subcategory = Subcategory::where('category_id', $id)->get();
 
         if (!$subcategory) {
-            return ResponseHelper::error('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return ResponseHelper::success($subcategory, 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategory)), 'Sukses');
     }
 
     public function store(Request $request)
@@ -71,7 +72,7 @@ class AccountController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $account = Account::create([
@@ -83,7 +84,7 @@ class AccountController extends Controller
             'balance' => $request->input('balance'),
         ]);
 
-        return ResponseHelper::success($account, 'Account berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse($account, 'Account berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -91,7 +92,7 @@ class AccountController extends Controller
         $account = Account::find($id);
 
         if (!$account) {
-            return ResponseHelper::error('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $validator = Validator::make($request->all(), [
@@ -103,7 +104,7 @@ class AccountController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $account->update([
@@ -115,7 +116,7 @@ class AccountController extends Controller
             'balance' => $request->input('balance'),
         ]);
 
-        return ResponseHelper::success($account, 'Account berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse($account, 'Account berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -123,10 +124,10 @@ class AccountController extends Controller
         $account = Account::find($id);
 
         if (!$account) {
-            return ResponseHelper::error('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $account->delete();
-        return ResponseHelper::success([], 'Account berhasil dihapus');
+        return $this->sendResponse([], 'Account berhasil dihapus');
     }
 }

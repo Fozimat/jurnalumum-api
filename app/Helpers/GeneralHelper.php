@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Helpers;
+
 class GeneralHelper
 {
     public static function currency($total)

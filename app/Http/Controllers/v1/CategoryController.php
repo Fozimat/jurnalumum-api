@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
-use App\Helpers\ResponseHelper;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -23,8 +23,7 @@ class CategoryController extends Controller
         }
 
         $categories = $query->paginate($per_page);
-
-        return ResponseHelper::success($categories, 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(CategoryResource::collection($categories)), 'Sukses');
     }
 
     public function show($id)
@@ -32,10 +31,10 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return ResponseHelper::error('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return ResponseHelper::success($category, 'Sukses');
+        return $this->sendResponse(new CategoryResource($category), 'Sukses');
     }
 
     public function store(Request $request)
@@ -46,7 +45,7 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category = Category::create([
@@ -54,7 +53,7 @@ class CategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return ResponseHelper::success($category, 'Category berhasil ditambahkan', Response::HTTP_CREATED);
+        return $this->sendResponse($category, 'Category berhasil ditambahkan', Response::HTTP_CREATED);
     }
 
     public function update(Request $request, $id)
@@ -62,7 +61,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return ResponseHelper::error('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $validator = Validator::make($request->all(), [
@@ -71,7 +70,7 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ResponseHelper::error($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $category->update([
@@ -79,7 +78,7 @@ class CategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return ResponseHelper::success($category, 'Category berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse($category, 'Category berhasil diperbarui', Response::HTTP_CREATED);
     }
 
     public function destroy($id)
@@ -87,11 +86,11 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return ResponseHelper::error('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
         $category->delete();
 
-        return ResponseHelper::success([], 'Category berhasil dihapus');
+        return $this->sendResponse([], 'Category berhasil dihapus');
     }
 }

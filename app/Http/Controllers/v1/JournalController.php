@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\JournalDetailResource;
+use App\Http\Resources\JournalResource;
 use App\Models\Account;
 use App\Models\JournalDetail;
 use App\Models\Journal;
@@ -29,18 +30,18 @@ class JournalController extends Controller
         }
 
         $journals = $query->paginate($per_page);
-        return ResponseHelper::success($journals);
+        return $this->sendResponse($this->ResourceCollection(JournalResource::collection($journals)));
     }
 
     public function show($id)
     {
-        $journal = Journal::with('journal_details.account')->where('id', $id)->get();
+        $journal = Journal::with('journal_details.account')->where('id', $id)->first();
 
         if (!$journal) {
-            return ResponseHelper::error('Jurnal tidak ditemukan', Response::HTTP_NOT_FOUND);
+            return $this->sendError('Jurnal tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return ResponseHelper::success($journal);
+        return $this->sendResponse(new JournalDetailResource($journal));
     }
 
     public function store(Request $request)
@@ -62,7 +63,7 @@ class JournalController extends Controller
 
             if ($total_debit != $total_credit) {
                 DB::rollBack();
-                return ResponseHelper::error('Total debit dan credit harus sama', Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->sendError('Total debit dan credit harus sama', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $journal = Journal::create([
@@ -92,7 +93,7 @@ class JournalController extends Controller
                 if ($saldoDebit) {
                     if ($entry['credit'] > $account->balance) {
                         DB::rollBack();
-                        return ResponseHelper::error('Saldo tidak mencukupi', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        return $this->sendError('Saldo tidak mencukupi', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($entry['debit'] > 0) {
                         $account->balance += $entry['debit'];
@@ -102,7 +103,7 @@ class JournalController extends Controller
                 } else {
                     if ($entry['debit'] > $account->balance) {
                         DB::rollBack();
-                        return ResponseHelper::error('Kelebihan pembayaran', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        return $this->sendError('Kelebihan pembayaran', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     if ($entry['credit'] > 0) {
                         $account->balance += $entry['credit'];
@@ -115,10 +116,10 @@ class JournalController extends Controller
             }
 
             DB::commit();
-            return ResponseHelper::success([], 'Jurnal berhasil ditambahkan', Response::HTTP_CREATED);
+            return $this->sendResponse([], 'Jurnal berhasil ditambahkan', Response::HTTP_CREATED);
         } catch (\Exception $exception) {
             DB::rollBack();
-            return ResponseHelper::error($exception->getLine() . ' ' . $exception->getMessage(), Response::HTTP_PRECONDITION_FAILED);
+            return $this->sendError($exception->getLine() . ' ' . $exception->getMessage(), Response::HTTP_PRECONDITION_FAILED);
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\v1;
 
 use App\Exports\IncomeStatementExport;
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\JournalDetail;
@@ -31,7 +30,7 @@ class IncomeStatementReportController extends Controller
             'expense' => $expense
         ];
 
-        return ResponseHelper::success($response);
+        return $this->sendResponse($response);
     }
 
     public function getAccountByCategory($kategori)
