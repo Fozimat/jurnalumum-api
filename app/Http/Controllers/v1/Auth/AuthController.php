@@ -23,7 +23,7 @@ class AuthController extends Controller
                 'code' => 422,
                 'success' => false,
                 'messages' => 'Pendaftaran Gagal',
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
@@ -54,12 +54,16 @@ class AuthController extends Controller
                 'code' => 422,
                 'success' => false,
                 'messages' => 'Login Gagal',
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()->all(),
             ]);
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
+
+            Auth::user()->tokens()->delete();
+
             $token = Auth::user()->createToken('api-token')->plainTextToken;
+
             $user = [
                 'name' => Auth::user()->name,
                 'email' => Auth::user()->email,
