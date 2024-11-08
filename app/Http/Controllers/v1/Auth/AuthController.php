@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -19,26 +19,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'messages' => 'Pendaftaran Gagal',
-                'errors' => $validator->errors()->all(),
-            ]);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-        ]);
-
-        return response()->json([
-            'code' => 201,
-            'success' => true,
-            'messages' => 'Pendaftaran Sukses',
-            'data' => $user,
-        ]);
+        return $this->sendResponse('', 'Pendaftaran Sukses', Response::HTTP_CREATED);
     }
 
 
@@ -50,12 +34,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 422,
-                'success' => false,
-                'messages' => 'Login Gagal',
-                'errors' => $validator->errors()->all(),
-            ]);
+            return $this->sendError($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
@@ -65,32 +44,20 @@ class AuthController extends Controller
             $token = Auth::user()->createToken('api-token')->plainTextToken;
 
             $user = [
+                'token' => $token,
                 'name' => Auth::user()->name,
                 'email' => Auth::user()->email,
             ];
-            return response()->json([
-                'code' => 200,
-                'success' => true,
-                'messages' => 'Login Sukses',
-                'token' => $token,
-                'user' => $user
-            ]);
+
+            return $this->sendResponse($user, 'Login Sukses', Response::HTTP_OK);
         }
 
-        return response()->json([
-            'code' => 401,
-            'success' => false,
-            'messages' => 'Email atau password salah',
-        ]);
+        return $this->sendError('Email atau password salah', Response::HTTP_UNAUTHORIZED);
     }
 
     public function logout(Request $request)
     {
         Auth::user()->tokens()->delete();
-        return response()->json([
-            'code' => 200,
-            'success' => true,
-            'messages' => 'Berhasil Logout',
-        ]);
+        return $this->sendResponse('', 'Logout Sukses', Response::HTTP_OK);
     }
 }
