@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * @unauthenticated
+     */
     public function register(RegisterRequest $request)
     {
         User::create([
@@ -25,6 +28,9 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * @unauthenticated
+     */
     public function login(LoginRequest $request)
     {
         if (Auth::attempt($request->only('email', 'password'))) {
