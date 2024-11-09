@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScrambleDocsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// https://github.com/dedoc/scramble/pull/548
+ScrambleDocsController::registerUiRoute(path: 'docs/api')->name('custom.scramble.docs.ui');
