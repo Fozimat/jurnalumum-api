@@ -27,7 +27,7 @@ class SubcategoryController extends Controller
 
         $subcategories = $query->paginate($per_page);
 
-        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategories)), 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategories)));
     }
 
     public function show($id)
@@ -38,7 +38,7 @@ class SubcategoryController extends Controller
             return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->sendResponse(new SubcategoryResource($subcategory), 'Sukses');
+        return $this->sendResponse(new SubcategoryResource($subcategory));
     }
 
     public function store(SubcategoryRequest $request)

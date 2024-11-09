@@ -36,7 +36,7 @@ class AccountController extends Controller
             $accounts = $query->paginate($per_page);
         }
 
-        return $this->sendResponse($this->ResourceCollection(AccountResource::collection($accounts)), 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(AccountResource::collection($accounts)));
     }
 
     public function show($id)
@@ -47,7 +47,7 @@ class AccountController extends Controller
             return $this->sendError('Account tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->sendResponse(new AccountResource($account), 'Sukses');
+        return $this->sendResponse(new AccountResource($account));
     }
 
     public function showSubcategory($id)
@@ -58,7 +58,7 @@ class AccountController extends Controller
             return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategory)), 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategory)));
     }
 
     public function store(AccountRequest $request)

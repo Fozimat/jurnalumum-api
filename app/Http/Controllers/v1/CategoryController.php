@@ -23,7 +23,7 @@ class CategoryController extends Controller
         }
 
         $categories = $query->paginate($per_page);
-        return $this->sendResponse($this->ResourceCollection(CategoryResource::collection($categories)), 'Sukses');
+        return $this->sendResponse($this->ResourceCollection(CategoryResource::collection($categories)));
     }
 
     public function show($id)
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             return $this->sendError('Category tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->sendResponse(new CategoryResource($category), 'Sukses');
+        return $this->sendResponse(new CategoryResource($category));
     }
 
     public function store(CategoryRequest $request)
