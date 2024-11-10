@@ -60,7 +60,7 @@ class CategoryController extends Controller
             'code' => $request->input('code'),
         ]);
 
-        return $this->sendResponse('', 'Category berhasil diperbarui', Response::HTTP_CREATED);
+        return $this->sendResponse('', 'Category berhasil diperbarui', Response::HTTP_OK);
     }
 
     public function destroy($id)

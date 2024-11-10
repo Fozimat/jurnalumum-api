@@ -18,10 +18,10 @@ class SubcategoryController extends Controller
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $query->where('name', 'like', "%$search%")
+            $query->where('subcategories.name', 'like', "%$search%")
                 ->orWhere('code', 'like', "%$search%")
                 ->orWhereHas('category', function ($q) use ($search) {
-                    $q->where('category.name', 'like', "%$search%");
+                    $q->where('categories.name', 'like', "%$search%");
                 });
         }
 
