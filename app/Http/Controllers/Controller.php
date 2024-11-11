@@ -52,10 +52,6 @@ class Controller extends BaseController
      */
     public static function sendError($message, $code = Response::HTTP_BAD_REQUEST)
     {
-        if (is_array($message)) {
-            $message = implode(', ', $message);
-        }
-
         $response = [
             'code' => $code,
             'success' => false,

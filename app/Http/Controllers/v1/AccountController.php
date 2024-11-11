@@ -30,7 +30,7 @@ class AccountController extends Controller
                 });
         }
 
-        if ($request->has('paginate') && $request->input('paginate') == 'false') {
+        if ($request->has('paginate')) {
             $accounts = $query->get();
         } else {
             $accounts = $query->paginate($per_page);
@@ -52,13 +52,13 @@ class AccountController extends Controller
 
     public function showSubcategory($id)
     {
-        $subcategory = Subcategory::where('category_id', $id)->get();
+        $subcategory = Subcategory::where('category_id', $id)->first();
 
         if (!$subcategory) {
             return $this->sendError('Sub Kategori tidak ditemukan', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->sendResponse($this->ResourceCollection(SubcategoryResource::collection($subcategory)));
+        return $this->sendResponse(new SubcategoryResource($subcategory));
     }
 
     public function store(AccountRequest $request)
