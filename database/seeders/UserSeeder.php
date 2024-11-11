@@ -6,11 +6,11 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UsersTableSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     * php artisan db:seed --class=UsersTableSeeder
+     * php artisan db:seed --class=UsersSeeder
      */
     public function run(): void
     {

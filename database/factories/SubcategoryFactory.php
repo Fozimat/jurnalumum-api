@@ -19,8 +19,8 @@ class SubcategoryFactory extends Factory
     {
         return [
             'category_id' => Category::factory(),
-            'name' => $this->faker->word(25),
-            'code' => $this->faker->word(5)
+            'name' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
+            'code' => $this->faker->unique()->regexify('[A-Z0-9]{10}')
         ];
     }
 }

@@ -17,8 +17,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(25),
-            'code' => $this->faker->word(5)
+            'name' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
+            'code' => $this->faker->unique()->regexify('[A-Z0-9]{10}')
         ];
     }
 }

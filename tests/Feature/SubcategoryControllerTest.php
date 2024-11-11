@@ -37,7 +37,7 @@ class SubcategoryControllerTest extends TestCase
     {
         $category = Category::factory()->create();
         $subcategory = Subcategory::factory()->make(['category_id' => $category->id]);
-        $response = $this->getJson('/api/v1/subcategories/' . $subcategory->id + 1);
+        $response = $this->getJson('/api/v1/subcategories/' . $subcategory->id + 100);
         $response->assertStatus(404);
     }
 

@@ -20,8 +20,8 @@ class AccountFactory extends Factory
     {
         return [
             'subcategory_id' => Subcategory::factory()->create(),
-            'name' => $this->faker->name(),
-            'code' => $this->faker->word(5),
+            'name' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
+            'code' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
             'initial_balance' => $this->faker->numberBetween(0, 1000000),
             'initial_balance_date' => Carbon::now()->format('Y-m-d'),
             'balance' => $this->faker->numberBetween(0, 1000000),
